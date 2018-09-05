@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="android.timingbar.com.library">
+          package="com.timingbar.android.library">
     <!--相机-->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera"/>
@@ -16,7 +16,7 @@
     <!---ACCESS_FINE_LOCATION：允许APP访问精确地理位置。-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!---ACCESS_COARSE_LOCATION：允许APP访问大概地理位置-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -24,18 +24,22 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.timingbar.android.library.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ScanActivity"
+        <!--二维码扫描-->
+        <activity android:name="com.timingbar.android.library.ScanActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"
                   android:screenOrientation="portrait"
         />
-        <activity android:name=".CameraActivity"/>
+        <!--拍照-->
+        <activity android:name="com.timingbar.android.library.CameraActivity"/>
+        <!--手写签名-->
+        <activity android:name="com.timingbar.android.library.HandSignActivity"/>
     </application>
 
 </manifest>

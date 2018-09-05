@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HandWriteView">
+        <!--画笔颜色-->
+        <attr name="paintColor" format="color"/>
+        <!--画板的宽-->
+        <attr name="paintMaxWidth" format="dimension"/>
+        <!--画板的高-->
+        <attr name="paintMinWidth" format="dimension"/>
+    </declare-styleable>
+</resources>

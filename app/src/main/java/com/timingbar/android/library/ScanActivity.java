@@ -1,4 +1,4 @@
-package android.timingbar.com.library;
+package com.timingbar.android.library;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -7,23 +7,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import lib.android.timingbar.com.camera.ScanCallback;
 import lib.android.timingbar.com.camera.ScanCameraPreview;
 
 public class ScanActivity extends AppCompatActivity {
-
+    @BindView(R.id.scan_preview)
     ScanCameraPreview scanPreview;
+    @BindView(R.id.scan_restart)
     Button scanRestart;
+    @BindView(R.id.scan_result)
     TextView scanResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.scan);
+        ButterKnife.bind (this);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        scanPreview = findViewById (R.id.scan_preview);
-        scanRestart = findViewById (R.id.scan_restart);
-        scanResult = findViewById (R.id.scan_result);
         scanPreview.setScanCallback (resultCallback);
         scanRestart.setOnClickListener (new View.OnClickListener () {
             @Override

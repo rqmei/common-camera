@@ -1,27 +1,29 @@
-package android.timingbar.com.library;
+package com.timingbar.android.library;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnScan, btnCamera, btnGps;
-    TextView tvLocation;
+    @BindView(R.id.btn_scan)
+    Button btnScan;
+    @BindView(R.id.btn_camera)
+    Button btnCamera;
+    @BindView(R.id.btn_hand_sign)
+    Button btnHandSign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_main);
-        btnScan = findViewById (R.id.btn_scan);
-        btnCamera = findViewById (R.id.btn_camera);
-        btnGps = findViewById (R.id.btn_gps);
-        tvLocation = findViewById (R.id.tv_location);
+        ButterKnife.bind (this);
         btnScan.setOnClickListener (this);
         btnCamera.setOnClickListener (this);
-        btnGps.setOnClickListener (this);
+        btnHandSign.setOnClickListener (this);
     }
 
     @Override
@@ -33,9 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_camera://相机
                 startActivity (new Intent (this, CameraActivity.class));
                 break;
-            case R.id.btn_gps://
-
-
+            case R.id.btn_hand_sign://手写签名
+                startActivity (new Intent (this, HandSignActivity.class));
                 break;
         }
     }
