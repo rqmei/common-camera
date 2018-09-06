@@ -18,4 +18,12 @@ android {
 
 }
 dependencies {
+    compile(rootProject.ext.dependencies["support-v4"]) {
+        //依赖排除
+        exclude module: 'support-annotations'
+    }
+    compile(rootProject.ext.dependencies["appcompat-v7"]) {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+    }
 }

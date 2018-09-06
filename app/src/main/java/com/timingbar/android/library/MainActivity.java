@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnCamera;
     @BindView(R.id.btn_hand_sign)
     Button btnHandSign;
+    @BindView(R.id.btn_player)
+    Button btnPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnScan.setOnClickListener (this);
         btnCamera.setOnClickListener (this);
         btnHandSign.setOnClickListener (this);
+        btnPlayer.setOnClickListener (this);
     }
 
     @Override
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_hand_sign://手写签名
                 startActivity (new Intent (this, HandSignActivity.class));
+                break;
+            case R.id.btn_player://播放器
+                startActivity (new Intent (this, PlayerActivity.class));
                 break;
         }
     }
