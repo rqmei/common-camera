@@ -1,1 +1,1 @@
-include ':app', ':camera', ':common-view'
+include ':app', ':camera', ':common-view', ':common-http', ':common-base'

@@ -23,13 +23,18 @@
     <!---ACCESS_COARSE_LOCATION：允许APP访问大概地理位置-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
+            android:name="com.timingbar.android.app.ModuleApp"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="com.timingbar.android.library.MainActivity">
+        <!-- glide配置 -->
+        <meta-data
+                android:name="lib.android.timingbar.com.base.imageloader.glide.GlideConfiguration"
+                android:value="GlideModule"/>
+        <activity android:name="com.timingbar.android.library.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -37,16 +42,16 @@
             </intent-filter>
         </activity>
         <!--二维码扫描-->
-        <activity android:name="com.timingbar.android.library.ScanActivity"
+        <activity android:name="com.timingbar.android.library.ui.ScanActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"
                   android:screenOrientation="portrait"
         />
         <!--拍照-->
-        <activity android:name="com.timingbar.android.library.CameraActivity"/>
+        <activity android:name="com.timingbar.android.library.ui.CameraActivity"/>
         <!--手写签名-->
-        <activity android:name="com.timingbar.android.library.HandSignActivity"/>
+        <activity android:name="com.timingbar.android.library.ui.HandSignActivity"/>
         <!--视频播放器-->
-        <activity android:name=".PlayerActivity"
+        <activity android:name=".ui.PlayerActivity"
                   android:configChanges="orientation|keyboardHidden|screenSize|navigation"
                   android:launchMode="singleTop"
         />
