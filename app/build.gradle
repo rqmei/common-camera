@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    buildToolsVersion rootProject.ext.android["buildToolsVersion"]
     defaultConfig {
         applicationId "com.timingbar.android.library"
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
-        compileSdkVersion rootProject.ext.android["compileSdkVersion"]
-        buildToolsVersion rootProject.ext.android["buildToolsVersion"]
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -25,13 +25,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-   /* compile(rootProject.ext.dependencies["appcompat-v7"]) {
-        exclude module: 'support-annotations'
-        exclude module: 'support-v4'
-    }
-    androidTestCompile('com.android.support:support-annotations:27.0.2') {
-        force = true
-    }*/
     //不添加butterknife绑定控件要报空指针异常
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     implementation project(':camera')
