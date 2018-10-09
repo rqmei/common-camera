@@ -7,17 +7,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import butterknife.BindView;
 import com.timingbar.android.library.R;
+import com.timingbar.android.library.control.CommonControl;
 import com.timingbar.android.library.module.entity.Lesson;
 import com.timingbar.android.library.presenter.CommonPresenter;
 import lib.android.timingbar.com.base.activity.BaseActivity;
 import lib.android.timingbar.com.base.imageloader.glide.GlideImageConfig;
+import lib.android.timingbar.com.base.mvp.EventMessage;
 import lib.android.timingbar.com.base.mvp.IView;
 import lib.android.timingbar.com.base.mvp.Message;
 import lib.android.timingbar.com.http.util.HttpLog;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity<CommonPresenter> implements View.OnClickListener, IView {
+public class MainActivity extends BaseActivity<CommonPresenter> implements View.OnClickListener, CommonControl.View {
     @BindView(R.id.btn_scan)
     Button btnScan;
     @BindView(R.id.btn_camera)
@@ -64,11 +66,6 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
     }
 
     @Override
-    public void handleMessage(Message message) {
-        HttpLog.i ("mainActivity===" + ((List<Lesson>) message.obj).size ());
-    }
-
-    @Override
     public int getLayoutResId() {
         return R.layout.activity_main;
     }
@@ -80,7 +77,7 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
         btnHandSign.setOnClickListener (this);
         btnPlayer.setOnClickListener (this);
         mPresenter.getVersionCode ();
-        mPresenter.getLsssonPhase (Message.obtain (this));
+        mPresenter.getLsssonPhase ();
         application.imageLoader ().loadImage (getApplicationContext (), GlideImageConfig.builder ().imageView (ivGlid).placeholder (R.mipmap.ic_launcher).transformationType (4).url ("http://ww1.sinaimg.cn/mw600/6345d84ejw1dvxp9dioykg.gif").build ());
         application.imageLoader ().loadImage (this, GlideImageConfig.builder ().url ("http://pic14.nipic.com/20110607/6776092_111031284000_2.jpg").loadAnimal (R.anim.slide_in_left).cacheStrategy (1).transformationType (2).bgView (btnPlayer).placeholder (R.mipmap.ic_launcher).build ());
     }
@@ -96,4 +93,9 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
         mPresenter.onDestroy ();
     }
 
+    @Override
+    public void onReceiveEvent(EventMessage event) {
+        List<Lesson> lessons= (List<Lesson>) event.getData ();
+        HttpLog.i ("mainActivity onReceiveEvent===" +lessons.size ());
+    }
 }

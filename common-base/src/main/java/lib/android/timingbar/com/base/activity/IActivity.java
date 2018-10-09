@@ -18,7 +18,7 @@ public interface IActivity<P extends IPresenter> {
      *
      * @return true 表示需要使用eventBus传递事件，这个时候需要注册订阅
      */
-    boolean useEventBus();
+    boolean isRegisterEventBus();
 
     /**
      * 如果getLayoutResId返回0,框架则不会调用{@link android.app.Activity#setContentView(int)}

@@ -8,7 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import lib.android.timingbar.com.base.mvp.EventMessage;
 import lib.android.timingbar.com.base.mvp.IPresenter;
+import lib.android.timingbar.com.base.util.EventBusUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * BaseFragment
@@ -34,6 +38,9 @@ public abstract class BaseFragment<P extends IPresenter> extends Fragment implem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = initView (inflater, container, savedInstanceState);
+        if (isRegisterEventBus ()) {
+            EventBusUtils.register (this);
+        }
         unbinder = ButterKnife.bind (this, rootView);
         return rootView;
     }
@@ -90,7 +97,12 @@ public abstract class BaseFragment<P extends IPresenter> extends Fragment implem
     @Override
     public void onDestroyView() {
         super.onDestroyView ();
-        unbinder.unbind ();
+        if (isRegisterEventBus ()) {
+            EventBusUtils.unregister (this);
+        }
+        if (unbinder != null) {
+            unbinder.unbind ();
+        }
     }
 
     @Override
@@ -102,7 +114,7 @@ public abstract class BaseFragment<P extends IPresenter> extends Fragment implem
      * 是否使用eventBus,默认为使用(true)，
      */
     @Override
-    public boolean useEventBus() {
+    public boolean isRegisterEventBus() {
         return true;
     }
 
@@ -134,5 +146,22 @@ public abstract class BaseFragment<P extends IPresenter> extends Fragment implem
     protected void onStopLoad() {
     }
 
+    /**
+     * 接收到分发的事件
+     *
+     * @param event 事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveEvent(EventMessage event) {
+    }
+
+    /**
+     * 接受到分发的粘性事件
+     *
+     * @param event 粘性事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onReceiveStickyEvent(EventMessage event) {
+    }
 }
 

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import lib.android.timingbar.com.base.mvp.EventMessage;
 import lib.android.timingbar.com.base.util.BaseLog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,17 +49,17 @@ public class AppManager {
      * 通过eventbus post事件,远程遥控执行对应方法
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceive(Message message) {
-        switch (message.what) {
+    public void onReceive(EventMessage message) {
+        switch (message.getCode ()) {
             case START_ACTIVITY:
-                if (message.obj == null)
+                if (message.getData () == null)
                     break;
                 dispatchStart (message);
                 break;
             case SHOW_SNACKBAR:
-                if (message.obj == null)
+                if (message.getData () == null)
                     break;
-                showSnackbar ((String) message.obj, message.arg1 == 0 ? false : true);
+                showSnackbar ((String) message.getData (), message.getCode () == 0 ? false : true);
                 break;
             case KILL_ALL:
                 killAll ();
@@ -77,11 +78,11 @@ public class AppManager {
      *
      * @param message
      */
-    private void dispatchStart(Message message) {
-        if (message.obj instanceof Intent)
-            startActivity ((Intent) message.obj);
-        else if (message.obj instanceof Class)
-            startActivity ((Class) message.obj);
+    private void dispatchStart(EventMessage message) {
+        if (message.getData () instanceof Intent)
+            startActivity ((Intent) message.getData ());
+        else if (message.getData () instanceof Class)
+            startActivity ((Class) message.getData ());
     }
 
     /**

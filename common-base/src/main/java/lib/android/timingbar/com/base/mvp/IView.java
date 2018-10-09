@@ -1,6 +1,5 @@
 package lib.android.timingbar.com.base.mvp;
 
-import lib.android.timingbar.com.base.mvp.Message;
 
 /**
  * IView
@@ -33,6 +32,6 @@ public interface IView {
      *
      * @param message
      */
-    void handleMessage(Message message);
+  /*  void handleMessage(Message message);*/
 
 }

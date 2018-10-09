@@ -20,7 +20,7 @@ public interface IFragment<P extends IPresenter> {
      *
      * @return true 表示需要使用eventBus传递事件，这个时候需要注册订阅
      */
-    boolean useEventBus();
+    boolean isRegisterEventBus();
 
     /**
      * @param inflater

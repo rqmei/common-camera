@@ -2,6 +2,7 @@ package com.timingbar.android.library.module;
 
 import com.google.gson.reflect.TypeToken;
 import com.timingbar.android.app.ApiConfig;
+import com.timingbar.android.library.control.CommonControl;
 import com.timingbar.android.library.module.entity.Lesson;
 import io.reactivex.Observable;
 import lib.android.timingbar.com.base.mvp.IRepositoryManager;
@@ -18,7 +19,7 @@ import java.util.List;
  * @author rqmei on 2018/9/7
  */
 
-public class CommonRepository implements IModel {
+public class CommonRepository implements CommonControl.Modle {
     IRepositoryManager manager;
     /**
      * 必须含有一个接收IRepositoryManager接口的构造函数,否则会报错

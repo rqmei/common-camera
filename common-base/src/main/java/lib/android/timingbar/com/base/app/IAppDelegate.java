@@ -1,7 +1,5 @@
 package lib.android.timingbar.com.base.app;
 
-import android.app.Application;
-
 /**
  * IAppDelegate
  * -----------------------------------------------------------------------------------------------------------------------------------
