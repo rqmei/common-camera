@@ -12,7 +12,7 @@ import android.view.*;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.timingbar.safe.library.util.StringUtils;
+import lib.android.timingbar.com.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

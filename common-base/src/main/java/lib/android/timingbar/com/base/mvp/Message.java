@@ -117,7 +117,7 @@ public final class Message implements Parcelable {
                 return m;
             }
         }
-        return new Message();
+        return new Message ();
     }
 
     /**
@@ -128,7 +128,7 @@ public final class Message implements Parcelable {
      * @return A Message object from the global pool.
      */
     public static Message obtain(Message orig) {
-        Message m = obtain();
+        Message m = obtain ();
         m.what = orig.what;
         m.str = orig.str;
         m.presenter = orig.presenter;
@@ -153,20 +153,20 @@ public final class Message implements Parcelable {
      * @return A Message object from the global pool.
      */
     public static Message obtain(IView v) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         return m;
     }
 
     public static Message obtain(IView v, Object obj) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.obj = obj;
         return m;
     }
 
     public static Message obtain(IView v, Object[] objs) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.objs = objs;
         return m;
@@ -174,26 +174,26 @@ public final class Message implements Parcelable {
 
 
     public static Message obtain(IView v, Class presenter) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
-        m.presenter = presenter.getSimpleName();
+        m.presenter = presenter.getSimpleName ();
         return m;
     }
 
 
     public static Message obtain(IView v, Object obj, Class presenter) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.obj = obj;
-        m.presenter = presenter.getSimpleName();
+        m.presenter = presenter.getSimpleName ();
         return m;
     }
 
     public static Message obtain(IView v, Object[] objs, Class presenter) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.objs = objs;
-        m.presenter = presenter.getSimpleName();
+        m.presenter = presenter.getSimpleName ();
         return m;
     }
 
@@ -207,7 +207,7 @@ public final class Message implements Parcelable {
      * @return A Message object from the global pool.
      */
     public static Message obtain(IView v, int what) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.what = what;
 
@@ -224,7 +224,7 @@ public final class Message implements Parcelable {
      * @return A Message object from the global pool.
      */
     public static Message obtain(IView v, int what, Object obj) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.what = what;
         m.obj = obj;
@@ -243,7 +243,7 @@ public final class Message implements Parcelable {
      * @return A Message object from the global pool.
      */
     public static Message obtain(IView v, int what, int arg1, int arg2) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.what = what;
         m.arg1 = arg1;
@@ -265,7 +265,7 @@ public final class Message implements Parcelable {
      */
     public static Message obtain(IView v, int what,
                                  int arg1, int arg2, Object obj) {
-        Message m = obtain();
+        Message m = obtain ();
         m.target = v;
         m.what = what;
         m.arg1 = arg1;
@@ -282,7 +282,7 @@ public final class Message implements Parcelable {
      * @return
      */
     public boolean isFromThisPresenter(Class presenter) {
-        return this.presenter.equals(presenter.getSimpleName());
+        return this.presenter.equals (presenter.getSimpleName ());
     }
 
     /**
@@ -303,14 +303,14 @@ public final class Message implements Parcelable {
      * </p>
      */
     public void recycle() {
-        if (isInUse()) {
+        if (isInUse ()) {
             if (gCheckRecycle) {
                 throw new IllegalStateException ("This message cannot be recycled because it "
                         + "is still in use.");
             }
             return;
         }
-        recycleUnchecked();
+        recycleUnchecked ();
     }
 
     /**
@@ -360,7 +360,7 @@ public final class Message implements Parcelable {
         this.sendingUid = o.sendingUid;
 
         if (o.data != null) {
-            this.data = (Bundle) o.data.clone();
+            this.data = (Bundle) o.data.clone ();
         } else {
             this.data = null;
         }
@@ -431,19 +431,21 @@ public final class Message implements Parcelable {
      * 分发消息(这里需要自己切换线程),调用{@link IView#handleMessage(Message)}处理消息后
      * 将消息放入消息池,供下次{@link #obtain()}
      */
-    public void HandleMessageToTarget() {
+   /* 
+   TODO iview分发消息
+   public void HandleMessageToTarget() {
         if (target == null) throw new IllegalArgumentException ("target is null");
         target.handleMessage(this);
         this.recycleUnchecked();
     }
 
-    /**
+    *//**
      * 分发消息(这里需要自己切换线程),调用{@link IView#handleMessage(Message)}处理消息
-     */
+     *//*
     public void HandleMessageToTargetUnrecycle() {
         if (target == null) throw new IllegalArgumentException ("target is null");
         target.handleMessage(this);
-    }
+    }*/
 
     /**
      * Returns true if the message is asynchronous, meaning that it is not
@@ -507,55 +509,55 @@ public final class Message implements Parcelable {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder ();
-        b.append("{");
+        b.append ("{");
 
         if (target != null) {
 
-            b.append(" what=");
-            b.append(what);
+            b.append (" what=");
+            b.append (what);
 
-            if (!TextUtils.isEmpty(presenter)) {
-                b.append(" presenter=");
-                b.append(presenter);
+            if (!TextUtils.isEmpty (presenter)) {
+                b.append (" presenter=");
+                b.append (presenter);
             }
 
-            if (!TextUtils.isEmpty(str)) {
-                b.append(" str=");
-                b.append(str);
+            if (!TextUtils.isEmpty (str)) {
+                b.append (" str=");
+                b.append (str);
             }
 
 
             if (arg1 != 0) {
-                b.append(" arg1=");
-                b.append(arg1);
+                b.append (" arg1=");
+                b.append (arg1);
             }
 
             if (arg2 != 0) {
-                b.append(" arg2=");
-                b.append(arg2);
+                b.append (" arg2=");
+                b.append (arg2);
             }
 
             if (obj != null) {
-                b.append(" obj=");
-                b.append(obj);
+                b.append (" obj=");
+                b.append (obj);
             }
 
-            b.append(" target=");
-            b.append(target.getClass().getName());
+            b.append (" target=");
+            b.append (target.getClass ().getName ());
         } else {
-            b.append(" barrier=");
-            b.append(arg1);
+            b.append (" barrier=");
+            b.append (arg1);
         }
 
-        b.append(" }");
-        return b.toString();
+        b.append (" }");
+        return b.toString ();
     }
 
     public static final Creator<Message> CREATOR
             = new Creator<Message> () {
         public Message createFromParcel(Parcel source) {
-            Message msg = Message.obtain();
-            msg.readFromParcel(source);
+            Message msg = Message.obtain ();
+            msg.readFromParcel (source);
             return msg;
         }
 
@@ -569,58 +571,57 @@ public final class Message implements Parcelable {
     }
 
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(what);
-        dest.writeInt(arg1);
-        dest.writeInt(arg2);
-        dest.writeString(str);
-        dest.writeString(presenter);
+        dest.writeInt (what);
+        dest.writeInt (arg1);
+        dest.writeInt (arg2);
+        dest.writeString (str);
+        dest.writeString (presenter);
         if (obj != null) {
             try {
                 Parcelable p = (Parcelable) obj;
-                dest.writeInt(1);
-                dest.writeParcelable(p, flags);
+                dest.writeInt (1);
+                dest.writeParcelable (p, flags);
             } catch (ClassCastException e) {
                 throw new RuntimeException (
                         "Can't marshal non-Parcelable objects across processes.");
             }
         } else {
-            dest.writeInt(0);
+            dest.writeInt (0);
         }
 
         if (objs != null) {
             try {
                 Parcelable[] p = (Parcelable[]) objs;
-                dest.writeInt(1);
-                dest.writeParcelableArray(p,flags);
+                dest.writeInt (1);
+                dest.writeParcelableArray (p, flags);
             } catch (ClassCastException e) {
                 throw new RuntimeException (
                         "Can't marshal non-Parcelable objects across processes.");
             }
         } else {
-            dest.writeInt(0);
+            dest.writeInt (0);
         }
-        dest.writeBundle(data);
-        Messenger.writeMessengerOrNullToParcel(replyTo, dest);
-        dest.writeInt(sendingUid);
+        dest.writeBundle (data);
+        Messenger.writeMessengerOrNullToParcel (replyTo, dest);
+        dest.writeInt (sendingUid);
     }
 
 
-
     private void readFromParcel(Parcel source) {
-        what = source.readInt();
-        arg1 = source.readInt();
-        arg2 = source.readInt();
-        str = source.readString();
-        presenter = source.readString();
-        if (source.readInt() != 0) {
-            obj = source.readParcelable(getClass().getClassLoader());
+        what = source.readInt ();
+        arg1 = source.readInt ();
+        arg2 = source.readInt ();
+        str = source.readString ();
+        presenter = source.readString ();
+        if (source.readInt () != 0) {
+            obj = source.readParcelable (getClass ().getClassLoader ());
         }
-        if (source.readInt() != 0) {
-            objs = source.readParcelableArray(getClass().getClassLoader());
+        if (source.readInt () != 0) {
+            objs = source.readParcelableArray (getClass ().getClassLoader ());
         }
-        data = source.readBundle();
-        replyTo = Messenger.readMessengerOrNullFromParcel(source);
-        sendingUid = source.readInt();
+        data = source.readBundle ();
+        replyTo = Messenger.readMessengerOrNullFromParcel (source);
+        sendingUid = source.readInt ();
     }
 }
 

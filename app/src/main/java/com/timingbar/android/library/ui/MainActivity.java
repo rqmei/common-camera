@@ -1,5 +1,6 @@
 package com.timingbar.android.library.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,7 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
     Button btnPlayer;
     @BindView(R.id.iv_glid)
     ImageView ivGlid;
+    ProgressDialog progressDialog;
 
     @Override
     public void onClick(View v) {
@@ -52,12 +54,17 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
 
     @Override
     public void showLoading() {
+        if (progressDialog != null && !progressDialog.isShowing ()) {
+            progressDialog.show ();
+        }
 
     }
 
     @Override
     public void hideLoading() {
-
+        if (progressDialog != null && progressDialog.isShowing ()) {
+            progressDialog.dismiss ();
+        }
     }
 
     @Override
@@ -72,12 +79,14 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        progressDialog = new ProgressDialog (MainActivity.this);
+        progressDialog.setMessage ("正在获取章节列表");
         btnScan.setOnClickListener (this);
         btnCamera.setOnClickListener (this);
         btnHandSign.setOnClickListener (this);
         btnPlayer.setOnClickListener (this);
         mPresenter.getVersionCode ();
-        mPresenter.getLsssonPhase ();
+        mPresenter.getLsssonPhase (this);
         application.imageLoader ().loadImage (getApplicationContext (), GlideImageConfig.builder ().imageView (ivGlid).placeholder (R.mipmap.ic_launcher).transformationType (4).url ("http://ww1.sinaimg.cn/mw600/6345d84ejw1dvxp9dioykg.gif").build ());
         application.imageLoader ().loadImage (this, GlideImageConfig.builder ().url ("http://pic14.nipic.com/20110607/6776092_111031284000_2.jpg").loadAnimal (R.anim.slide_in_left).cacheStrategy (1).transformationType (2).bgView (btnPlayer).placeholder (R.mipmap.ic_launcher).build ());
     }
@@ -95,7 +104,7 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
 
     @Override
     public void onReceiveEvent(EventMessage event) {
-        List<Lesson> lessons= (List<Lesson>) event.getData ();
-        HttpLog.i ("mainActivity onReceiveEvent===" +lessons.size ());
+        List<Lesson> lessons = (List<Lesson>) event.getData ();
+        HttpLog.i ("mainActivity onReceiveEvent===" + lessons.size ());
     }
 }

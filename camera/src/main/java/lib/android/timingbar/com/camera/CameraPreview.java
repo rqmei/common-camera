@@ -2,6 +2,7 @@ package lib.android.timingbar.com.camera;
 
 import android.Manifest;
 import android.content.Context;
+import android.graphics.Point;
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import camera.android.timingbar.com.cameralibrary.R;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -49,7 +51,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
                 .callback (new PermissionListener () {
                     @Override
                     public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
-                        start (Camera.CameraInfo.CAMERA_FACING_BACK);
+                        start (Camera.CameraInfo.CAMERA_FACING_FRONT);
                     }
 
                     @Override
@@ -62,12 +64,12 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.i ("CameraPreview","cameraPreview surfaceCreated");
+        Log.i ("CameraPreview", "cameraPreview surfaceCreated");
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.i ("CameraManager","cameraPreview surfaceChanged");
+        Log.i ("CameraManager", "cameraPreview surfaceChanged");
         if (holder.getSurface () == null) {
             return;
         }
@@ -85,25 +87,52 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
      */
     public boolean start(int cameraId) {
         try {
-            mCameraManager.openDriver (cameraId);
+            mCameraManager.openCamera (cameraId);
         } catch (Exception e) {
-            Log.i ("CameraPreview","CameraPreview 打开相机失败。。。" + e.getMessage ());
+            Log.i ("CameraPreview", "CameraPreview 打开相机失败。。。" + e.getMessage ());
             return false;
         }
         if (mSurfaceView == null) {
-            Log.i ("CameraPreview","CameraPreview 开起预览。。。");
+            Log.i ("CameraPreview", "CameraPreview 开起预览。。。");
             mSurfaceView = new SurfaceView (getContext ());
-            addView (mSurfaceView, new LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            Point point = mCameraManager.getCameraResolution ();
+            Point screenResolution = mCameraManager.getScreenResolution ();
+            LayoutParams layoutParams = new LayoutParams (point.y, point.x);
+            float screenProp = (float) (screenResolution.y * 1.0 / screenResolution.x);
+            float previewProp = point.y == 0 ? 0.0F : ((float) point.x / (float) point.y);
+            if (screenProp > 1.8 && previewProp != 0) { //屏幕的宽高比大于1.8的时候处理
+                int measuredHeight = screenResolution.y;
+                int measuredWidth = screenResolution.x;
+                float clacWidth = measuredHeight / previewProp;   //计算出要显示的预览界面的宽度。
+                layoutParams = new LayoutParams ((int) clacWidth, measuredHeight);
+                if (clacWidth > 800 && Math.abs (clacWidth - measuredWidth) > clacWidth * 0.1F) {  //计算的宽度大于 800 并且和显示正常的布局的误差超过10%
+                    layoutParams.width = (int) clacWidth;
+                }
+                Log.i ("CameraPreview=", "width=" + clacWidth + ",layoutParams.height=" + measuredHeight);
+            }
+            Log.i ("CameraPreview", "start point=" + point.x + "," + point.y);
+            addView (mSurfaceView, layoutParams);
             SurfaceHolder holder = mSurfaceView.getHolder ();
             holder.addCallback (this);
             holder.setType (SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         }
+        addHeadView ();
+        addButtomView ();
+        startCameraPreview (mSurfaceView.getHolder ());
+        return true;
+    }
+
+
+    /**
+     * 自定义相机顶部view
+     */
+    private void addHeadView() {
         if (headView == null) {
             headView = LayoutInflater.from (getContext ()).inflate (R.layout.camera_header_bar, this, false);
             addView (headView);
             headViewHolder = new HeadViewHolder (headView);
             //设置闪光灯
-            headViewHolder.ivFlashMode.setOnClickListener (new OnClickListener () { 
+            headViewHolder.ivFlashMode.setOnClickListener (new OnClickListener () {
                 @Override
                 public void onClick(View v) {
                     CameraManager.FlashMode flashMode = mCameraManager.getFlashMode ();
@@ -127,7 +156,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
                 @Override
                 public void onClick(View v) {
                     stop ();
-                    Log.i ("CameraPreview","cameraPreView 开始切换camera摄像头isFrontCamera=" + mCameraManager.isFrontCamera () + "," + mCameraManager.isOpen ());
+                    Log.i ("CameraPreview", "cameraPreView 开始切换camera摄像头isFrontCamera=" + mCameraManager.isFrontCamera () + "," + mCameraManager.isOpen ());
                     if (mCameraManager.isFrontCamera ()) {
                         start (Camera.CameraInfo.CAMERA_FACING_BACK);
                     } else {
@@ -136,6 +165,12 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
                 }
             });
         }
+    }
+
+    /**
+     * 自定义相机底部view
+     */
+    private void addButtomView() {
         if (buttomView == null) {
             buttomView = LayoutInflater.from (getContext ()).inflate (R.layout.camera_bottom_bar, this, false);
             addView (buttomView);
@@ -148,8 +183,6 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
                 }
             });
         }
-        startCameraPreview (mSurfaceView.getHolder ());
-        return true;
     }
 
     class HeadViewHolder {

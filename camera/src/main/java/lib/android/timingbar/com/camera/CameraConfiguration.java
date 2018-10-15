@@ -23,7 +23,9 @@ public final class CameraConfiguration {
     private static final int MIN_PREVIEW_PIXELS = 480 * 320;
     private static final double MAX_ASPECT_DISTORTION = 0.15;
     private final Context context;
+    //手机屏幕尺寸
     private Point screenResolution;
+    //相机预览最佳尺寸
     private Point cameraResolution;
 
     CameraConfiguration(Context context) {
@@ -47,13 +49,19 @@ public final class CameraConfiguration {
             screenResolutionForCamera.x = screenResolution.y;
             screenResolutionForCamera.y = screenResolution.x;
         }
-
+        Log.w (TAG, "屏幕尺寸 screenResolution=" + screenResolution.x + "," + screenResolution.y);
         cameraResolution = findBestPreviewSizeValue (parameters, screenResolutionForCamera);
     }
 
+    /**
+     * 获取手机屏幕的宽高
+     *
+     * @param display
+     * @return
+     */
     private Point getDisplaySize(final Display display) {
         final Point point = new Point ();
-        if (Build.VERSION.SDK_INT >= 13)
+        if (Build.VERSION.SDK_INT >= 15)
             display.getSize (point);
         else {
             point.set (display.getWidth (), display.getHeight ());
@@ -61,17 +69,19 @@ public final class CameraConfiguration {
         return point;
     }
 
+    /**
+     * 设置相机预览的宽高
+     *
+     * @param camera
+     */
     public void setDesiredCameraParameters(Camera camera) {
         Camera.Parameters parameters = camera.getParameters ();
-
         if (parameters == null) {
             Log.w (TAG, "Device error: no camera parameters are available. Proceeding without configuration.");
             return;
         }
-
         parameters.setPreviewSize (cameraResolution.x, cameraResolution.y);
         camera.setParameters (parameters);
-
         Camera.Parameters afterParameters = camera.getParameters ();
         Camera.Size afterSize = afterParameters.getPreviewSize ();
         if (afterSize != null && (cameraResolution.x != afterSize.width || cameraResolution.y != afterSize.height)) {
@@ -102,7 +112,6 @@ public final class CameraConfiguration {
             cameraResolution.x = afterSize.width;
             cameraResolution.y = afterSize.height;
         }
-
         camera.setDisplayOrientation (90);
     }
 
@@ -217,6 +226,7 @@ public final class CameraConfiguration {
 
         return defaultSize;
     }
+
     /**
      * 获取屏幕宽度
      */
@@ -224,6 +234,7 @@ public final class CameraConfiguration {
         WindowManager wm = (WindowManager) context.getSystemService (Context.WINDOW_SERVICE);
         return wm.getDefaultDisplay ().getWidth ();
     }
+
     /**
      * 获取屏幕高度
      */

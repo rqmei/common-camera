@@ -29,9 +29,41 @@ public final class CameraManager {
     }
 
     /**
-     * 打开相机，获取camera
+     * 打开相机，获取camera（扫描二维码）
      **/
     public synchronized void openDriver(int cameraId) throws Exception {
+        Log.i ("CameraManager","CameraManager 。。。" + mCamera);
+        if (mCamera != null)
+            return;
+        mCamera = Camera.open (cameraId);
+        if (mCamera == null) {
+            Log.i ("CameraManager","CameraManager 相机对象为空。。。");
+            throw new IOException ("The camera is occupied.");
+        }
+        mConfiguration.initFromCameraParameters (mCamera);
+        Camera.Parameters parameters = mCamera.getParameters ();
+        String parametersFlattened = parameters == null ? null : parameters.flatten ();
+        try {
+            mConfiguration.setDesiredCameraParameters (mCamera);
+        } catch (RuntimeException re) {
+            Log.i ("CameraManager","CameraManager RuntimeException11。。。");
+            if (parametersFlattened != null) {
+                parameters = mCamera.getParameters ();
+                parameters.unflatten (parametersFlattened);
+                try {
+                    mCamera.setParameters (parameters);
+                    mConfiguration.setDesiredCameraParameters (mCamera);
+                } catch (RuntimeException e) {
+                    Log.i ("CameraManager","CameraManager RuntimeException。。。");
+                    e.printStackTrace ();
+                }
+            }
+        }
+    }
+    /**
+     * 打开相机，获取camera（拍照）
+     **/
+    public synchronized void openCamera(int cameraId) throws Exception {
         Log.i ("CameraManager","CameraManager 。。。" + mCamera);
         if (mCamera != null)
             return;
@@ -47,12 +79,14 @@ public final class CameraManager {
         }
         mConfiguration.initFromCameraParameters (mCamera);
         Camera.Parameters parameters = mCamera.getParameters ();
+        //camera参数Parameters赋值是否有出错
         String parametersFlattened = parameters == null ? null : parameters.flatten ();
         try {
             mConfiguration.setDesiredCameraParameters (mCamera);
         } catch (RuntimeException re) {
             Log.i ("CameraManager","CameraManager RuntimeException11。。。");
             if (parametersFlattened != null) {
+                //Parameters出现异常
                 parameters = mCamera.getParameters ();
                 parameters.unflatten (parametersFlattened);
                 try {
@@ -119,7 +153,9 @@ public final class CameraManager {
     public Point getCameraResolution() {
         return mConfiguration.getCameraResolution ();
     }
-
+    public Point getScreenResolution() {
+        return mConfiguration.getScreenResolution ();
+    }
     /**
      * Camera start preview.
      *
@@ -130,7 +166,7 @@ public final class CameraManager {
     public void startPreview(SurfaceHolder holder, Camera.PreviewCallback previewCallback) throws IOException {
         if (mCamera != null) {
             mConfiguration.setDesiredCameraParameters (mCamera, getRotation ());
-            mCamera.setDisplayOrientation (90);
+           // mCamera.setDisplayOrientation (90);
             mCamera.setPreviewDisplay (holder);
             mCamera.setPreviewCallback (previewCallback);
             mCamera.startPreview ();
@@ -163,13 +199,14 @@ public final class CameraManager {
      * @param callback {@link Camera.AutoFocusCallback}.
      */
     public void autoFocus(Camera.AutoFocusCallback callback) {
-        if (mCamera != null)
+        if (mCamera != null&&mCamera.getParameters ().isSmoothZoomSupported ())
             try {
                 mCamera.autoFocus (callback);
             } catch (Exception e) {
                 e.printStackTrace ();
             }
     }
+    
     //----------------------------闪关灯控制----------------------------------------------------
     /**
      * 闪光灯类型枚举 默认为关闭
