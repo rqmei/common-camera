@@ -30,5 +30,5 @@ dependencies {
     implementation project(':camera')
     implementation project(':common-view')
     implementation project(':common-http')
-    implementation project(':common-base')
+   // implementation project(':common-base')
 }

@@ -26,5 +26,8 @@ dependencies {
     compile(rootProject.ext.dependencies["appcompat-v7"]) {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
+        compile'com.android.support:recyclerview-v7:'+rootProject.ext.version["androidSupportSdkVersion"]
     }
+
+    compile project(path: ':common-base')
 }
