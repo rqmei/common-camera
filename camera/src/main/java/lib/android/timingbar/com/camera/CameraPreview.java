@@ -8,10 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import camera.android.timingbar.com.cameralibrary.R;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -32,6 +34,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
     private SurfaceView mSurfaceView;
     private View headView, buttomView;
     private HeadViewHolder headViewHolder;
+    Context context;
 
     public CameraPreview(@NonNull Context context) {
         this (context, null);
@@ -43,8 +46,9 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
 
     public CameraPreview(@NonNull final Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super (context, attrs, defStyleAttr);
+        this.context = context;
         mCameraManager = new CameraManager (context);
-        cameraPictureAnalysis = new CameraPictureAnalysis (getContext (), mCameraManager.isFrontCamera () ? mCameraManager.getDirection () : "back");
+
         //  动态获取相机权限并打开camera
         AndPermission.with (context)
                 .permission (Manifest.permission.CAMERA)
@@ -52,6 +56,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
                     @Override
                     public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
                         start (Camera.CameraInfo.CAMERA_FACING_FRONT);
+                        cameraPictureAnalysis = new CameraPictureAnalysis (getContext (), mCameraManager);
                     }
 
                     @Override
@@ -65,21 +70,18 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i ("CameraPreview", "cameraPreview surfaceCreated");
+        startCameraPreview (mSurfaceView.getHolder ());
+        mCameraManager.getmOrEventListener ().enable ();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.i ("CameraManager", "cameraPreview surfaceChanged");
-        if (holder.getSurface () == null) {
-            return;
-        }
-        mCameraManager.stopPreview ();
-        startCameraPreview (holder);
+        Log.i ("cameraManager", "cameraPreview surfaceChanged");
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        mCameraManager.getmOrEventListener ().disable ();
     }
 
     /**
@@ -87,7 +89,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
      */
     public boolean start(int cameraId) {
         try {
-            mCameraManager.openCamera (cameraId);
+            mCameraManager.openDriver (cameraId);
         } catch (Exception e) {
             Log.i ("CameraPreview", "CameraPreview 打开相机失败。。。" + e.getMessage ());
             return false;
@@ -118,7 +120,6 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
         }
         addHeadView ();
         addButtomView ();
-        startCameraPreview (mSurfaceView.getHolder ());
         return true;
     }
 
@@ -174,7 +175,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
         if (buttomView == null) {
             buttomView = LayoutInflater.from (getContext ()).inflate (R.layout.camera_bottom_bar, this, false);
             addView (buttomView);
-            ImageView ivShutterCamera = buttomView.findViewById (R.id.iv_shutter_camera);
+            ImageView ivShutterCamera = (ImageView) buttomView.findViewById (R.id.iv_shutter_camera);
             ivShutterCamera.setOnClickListener (new OnClickListener () {
                 @Override
                 public void onClick(View v) {
@@ -190,8 +191,8 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
         ImageView ivSwitchCamera;
 
         HeadViewHolder(View view) {
-            ivFlashMode = view.findViewById (R.id.iv_flash_mode);
-            ivSwitchCamera = view.findViewById (R.id.iv_switch_camera);
+            ivFlashMode = (ImageView) view.findViewById (R.id.iv_flash_mode);
+            ivSwitchCamera = (ImageView) view.findViewById (R.id.iv_switch_camera);
         }
     }
 
@@ -211,7 +212,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
      */
     private void startCameraPreview(SurfaceHolder holder) {
         try {
-            mCameraManager.startOrientationChangeListener (getContext ());
+            mCameraManager.startOrientationChangeListener (context);
             mCameraManager.startPreview (holder, null);
             mCameraManager.autoFocus (mFocusCallback);
         } catch (Exception e) {

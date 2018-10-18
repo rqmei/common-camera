@@ -92,30 +92,6 @@ public final class CameraConfiguration {
     }
 
     /**
-     * 防止拍照图片颠倒
-     *
-     * @param camera
-     * @param rotation
-     */
-    public void setDesiredCameraParameters(Camera camera, int rotation) {
-        Camera.Parameters parameters = camera.getParameters ();
-        if (parameters == null) {
-            Log.w (TAG, "Device error: no camera parameters are available. Proceeding without configuration.");
-            return;
-        }
-        parameters.setPreviewSize (cameraResolution.x, cameraResolution.y);
-        parameters.setRotation (rotation);// 生成的图片转90°
-        camera.setParameters (parameters);
-        Camera.Parameters afterParameters = camera.getParameters ();
-        Camera.Size afterSize = afterParameters.getPreviewSize ();
-        if (afterSize != null && (cameraResolution.x != afterSize.width || cameraResolution.y != afterSize.height)) {
-            cameraResolution.x = afterSize.width;
-            cameraResolution.y = afterSize.height;
-        }
-        camera.setDisplayOrientation (90);
-    }
-
-    /**
      * Camera resolution.
      *
      * @return {@link Point}.

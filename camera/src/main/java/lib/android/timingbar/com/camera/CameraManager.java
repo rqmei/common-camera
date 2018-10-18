@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.OrientationEventListener;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
@@ -22,78 +23,48 @@ import java.util.List;
 public final class CameraManager {
     private final CameraConfiguration mConfiguration;
     private Camera mCamera;
+    int mCameraId = 0;
     private boolean isFrontCamera = false;
+    Context context;
 
     public CameraManager(Context context) {
         this.mConfiguration = new CameraConfiguration (context);
+        this.context = context;
     }
 
     /**
      * 打开相机，获取camera（扫描二维码）
      **/
     public synchronized void openDriver(int cameraId) throws Exception {
-        Log.i ("CameraManager","CameraManager 。。。" + mCamera);
+        Log.i ("CameraManager", "CameraManager 。。。" + mCamera);
         if (mCamera != null)
             return;
+        this.mCameraId = cameraId;
         mCamera = Camera.open (cameraId);
-        if (mCamera == null) {
-            Log.i ("CameraManager","CameraManager 相机对象为空。。。");
-            throw new IOException ("The camera is occupied.");
-        }
-        mConfiguration.initFromCameraParameters (mCamera);
-        Camera.Parameters parameters = mCamera.getParameters ();
-        String parametersFlattened = parameters == null ? null : parameters.flatten ();
-        try {
-            mConfiguration.setDesiredCameraParameters (mCamera);
-        } catch (RuntimeException re) {
-            Log.i ("CameraManager","CameraManager RuntimeException11。。。");
-            if (parametersFlattened != null) {
-                parameters = mCamera.getParameters ();
-                parameters.unflatten (parametersFlattened);
-                try {
-                    mCamera.setParameters (parameters);
-                    mConfiguration.setDesiredCameraParameters (mCamera);
-                } catch (RuntimeException e) {
-                    Log.i ("CameraManager","CameraManager RuntimeException。。。");
-                    e.printStackTrace ();
-                }
-            }
-        }
-    }
-    /**
-     * 打开相机，获取camera（拍照）
-     **/
-    public synchronized void openCamera(int cameraId) throws Exception {
-        Log.i ("CameraManager","CameraManager 。。。" + mCamera);
-        if (mCamera != null)
-            return;
-        mCamera = Camera.open (cameraId);
-        if (mCamera == null) {
-            Log.i ("CameraManager","CameraManager 相机对象为空。。。");
-            throw new IOException ("The camera is occupied.");
-        }
         if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             isFrontCamera = true;
         } else {
             isFrontCamera = false;
         }
+        if (mCamera == null) {
+            Log.i ("CameraManager", "CameraManager 相机对象为空。。。");
+            throw new IOException ("The camera is occupied.");
+        }
         mConfiguration.initFromCameraParameters (mCamera);
         Camera.Parameters parameters = mCamera.getParameters ();
-        //camera参数Parameters赋值是否有出错
         String parametersFlattened = parameters == null ? null : parameters.flatten ();
         try {
             mConfiguration.setDesiredCameraParameters (mCamera);
         } catch (RuntimeException re) {
-            Log.i ("CameraManager","CameraManager RuntimeException11。。。");
+            Log.i ("CameraManager", "CameraManager RuntimeException11。。。");
             if (parametersFlattened != null) {
-                //Parameters出现异常
                 parameters = mCamera.getParameters ();
                 parameters.unflatten (parametersFlattened);
                 try {
                     mCamera.setParameters (parameters);
                     mConfiguration.setDesiredCameraParameters (mCamera);
                 } catch (RuntimeException e) {
-                    Log.i ("CameraManager","CameraManager RuntimeException。。。");
+                    Log.i ("CameraManager", "CameraManager RuntimeException。。。");
                     e.printStackTrace ();
                 }
             }
@@ -133,18 +104,20 @@ public final class CameraManager {
     public CameraConfiguration getConfiguration() {
         return mConfiguration;
     }
+
     public int getStatusBarHeight(Context context) {
         try {
-            Class<?> c = Class.forName("com.android.internal.R$dimen");
-            Object obj = c.newInstance();
-            Field field = c.getField("status_bar_height");
-            int x = Integer.parseInt(field.get(obj).toString());
-            return context.getResources().getDimensionPixelSize(x);
+            Class<?> c = Class.forName ("com.android.internal.R$dimen");
+            Object obj = c.newInstance ();
+            Field field = c.getField ("status_bar_height");
+            int x = Integer.parseInt (field.get (obj).toString ());
+            return context.getResources ().getDimensionPixelSize (x);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
         return 0;
     }
+
     /**
      * Camera resolution.
      *
@@ -153,9 +126,11 @@ public final class CameraManager {
     public Point getCameraResolution() {
         return mConfiguration.getCameraResolution ();
     }
+
     public Point getScreenResolution() {
         return mConfiguration.getScreenResolution ();
     }
+
     /**
      * Camera start preview.
      *
@@ -165,8 +140,7 @@ public final class CameraManager {
      */
     public void startPreview(SurfaceHolder holder, Camera.PreviewCallback previewCallback) throws IOException {
         if (mCamera != null) {
-            mConfiguration.setDesiredCameraParameters (mCamera, getRotation ());
-           // mCamera.setDisplayOrientation (90);
+            mConfiguration.setDesiredCameraParameters (mCamera);
             mCamera.setPreviewDisplay (holder);
             mCamera.setPreviewCallback (previewCallback);
             mCamera.startPreview ();
@@ -199,15 +173,16 @@ public final class CameraManager {
      * @param callback {@link Camera.AutoFocusCallback}.
      */
     public void autoFocus(Camera.AutoFocusCallback callback) {
-        if (mCamera != null&&mCamera.getParameters ().isSmoothZoomSupported ())
+        if (mCamera != null && mCamera.getParameters ().isSmoothZoomSupported ())
             try {
                 mCamera.autoFocus (callback);
             } catch (Exception e) {
                 e.printStackTrace ();
             }
     }
-    
+
     //----------------------------闪关灯控制----------------------------------------------------
+
     /**
      * 闪光灯类型枚举 默认为关闭
      */
@@ -229,6 +204,7 @@ public final class CameraManager {
          */
         TORCH
     }
+
     /**
      * 当前闪光灯类型，默认为关闭
      */
@@ -246,7 +222,7 @@ public final class CameraManager {
         Camera.Parameters parameters = mCamera.getParameters ();
         List<String> FlashModes = parameters.getSupportedFlashModes ();
         if (FlashModes != null) {
-            Log.i ("CameraManager","setFlashMode================================FlashModes==" + FlashModes);
+            Log.i ("CameraManager", "setFlashMode================================FlashModes==" + FlashModes);
             switch (flashMode) {
                 case ON://拍照时闪光灯；
                     if (FlashModes.contains (Camera.Parameters.FLASH_MODE_ON)) {
@@ -272,7 +248,7 @@ public final class CameraManager {
             mCamera.setParameters (parameters);
         } else {
             // Toasts.show("无闪关灯！");
-            Log.i ("CameraManager","无闪关灯=========================");
+            Log.i ("CameraManager", "无闪关灯=========================");
         }
     }
 
@@ -298,60 +274,54 @@ public final class CameraManager {
         }
     }
 
-    private String direction = "up";
     /**
      * 当前屏幕旋转角度
      */
-    private int mOrientation = 0;
+    private int rotation = 0;
+    OrientationEventListener mOrEventListener;
 
     /**
-     * 屏幕方向监听
+     * 屏幕方向监听，防止照片颠倒
      *
      * @param context
      */
     public void startOrientationChangeListener(Context context) {
-        OrientationEventListener mOrEventListener = new OrientationEventListener (context) {
+        mOrEventListener = new OrientationEventListener (context) {
             @Override
-            public void onOrientationChanged(int rotation) {
-                if (((rotation >= 0) && (rotation <= 45)) || (rotation > 315)) {
-                    rotation = 0;
-                    direction = "up";
-                } else if ((rotation > 45) && (rotation <= 135)) {
-                    rotation = 90;
-                    direction = "right";
-                } else if ((rotation > 135) && (rotation <= 225)) {
-                    rotation = 180;
-                    direction = "down";
-                } else if ((rotation > 225) && (rotation <= 315)) {
-                    rotation = 270;
-                    direction = "left";
-                } else {
-                    rotation = 0;
-                    direction = "up";
+            public void onOrientationChanged(int orientation) {
+                Camera.CameraInfo info = new Camera.CameraInfo ();
+                Camera.getCameraInfo (mCameraId, info);
+                int degrees = 0;
+                switch (rotation) {
+                    case Surface.ROTATION_0:
+                        degrees = 0;
+                        break;
+                    case Surface.ROTATION_90:
+                        degrees = 90;
+                        break;
+                    case Surface.ROTATION_180:
+                        degrees = 180;
+                        break;
+                    case Surface.ROTATION_270:
+                        degrees = 270;
+                        break;
                 }
-                if (rotation == mOrientation)
-                    return;
-                mOrientation = rotation;
+
+                int result;
+                if (isFrontCamera) {
+                    result = (info.orientation + degrees) % 360;
+                    result = (360 - result) % 360;  // compensate the mirror
+                } else {  // back-facing
+                    result = (info.orientation - degrees + 360) % 360;
+                }
+                if (mCamera != null) {
+                    mCamera.setDisplayOrientation (result);
+                }
             }
         };
-        mOrEventListener.enable ();
     }
 
-    public int getRotation() {
-        // rotation参数为 0、90、180、270。水平方向为0。
-        int rotation = 90 + mOrientation == 360 ? 0 : 90 + mOrientation;
-        // 前置摄像头需要对垂直方向做变换，否则照片是颠倒的
-        if (isFrontCamera) {
-            if (rotation == 90) {
-                rotation = 270;
-            } else if (rotation == 270) {
-                rotation = 90;
-            }
-        }
-        return rotation;
-    }
-
-    public String getDirection() {
-        return direction;
+    public OrientationEventListener getmOrEventListener() {
+        return mOrEventListener;
     }
 }

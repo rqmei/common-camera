@@ -24,19 +24,19 @@ import java.io.IOException;
 
 public class CameraPictureAnalysis implements Camera.PictureCallback {
     Context context;
-    String direction = "up";
     PictureCallback pictureCallback;
+    CameraManager cameraManager;
 
-    public CameraPictureAnalysis(Context context, String direction) {
+    public CameraPictureAnalysis(Context context, CameraManager cameraManager) {
         this.context = context;
-        this.direction = direction;
+        this.cameraManager = cameraManager;
     }
 
     private int _displaypixels = 720 * 1280;
 
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
-        Log.i ("CameraPictureAnalysis","CameraPictureAnalysis onPictureTaken拍照结果回调direction=" + direction);
+        Log.i ("CameraPictureAnalysis", "CameraPictureAnalysis onPictureTaken拍照结果回调");
         Bitmap b = null;
         _displaypixels = CameraConfiguration.getScreenWidthPixels (context) * CameraConfiguration.getScreenHeightPixels (context);
         if (null != data) {
@@ -49,36 +49,21 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
             opts.inJustDecodeBounds = false;
             // end
             b = BitmapFactory.decodeByteArray (data, 0, data.length, opts);// data是字节数据，将其解析成位 ?
-            saveBitmap (b);
-            if (pictureCallback != null) {
-                pictureCallback.onPictureTakenResult (b);
+            // 保存图片到sdcard
+            if (null != b) {
+                Camera.CameraInfo info = new Camera.CameraInfo ();
+                Camera.getCameraInfo (cameraManager.mCameraId, info);
+                Log.i ("CameraPictureAnalysis", "CameraPictureAnalysis orientation=" + info.orientation);
+                // 设置FOCUS_MODE_CONTINUOUS_VIDEO)之后，myParam.set("rotation", 90)失效。
+                // 图片竟然不能旋转了，故这里要旋转下
+                Bitmap rotaBitmap = getRotateBitmap (b, info.orientation);
+                // saveBitmap (rotaBitmap);
+                Bitmap bitmap = ThumbnailUtils.extractThumbnail (rotaBitmap, 213, 213);
+                if (pictureCallback != null) {
+                    pictureCallback.onPictureTakenResult (bitmap);
+                }
             }
         }
-        /*// 保存图片到sdcard
-        if (null != b) {
-            int angle = 0;
-            if (!direction.equals ("back")) {
-                if ("up".equals (direction)) {
-                    angle = -90;
-                } else if ("right".equals (direction)) {
-                    angle = 180;
-                } else if ("down".equals (direction)) {
-                    angle = -90;
-                }
-            } else {
-                if ("up".equals (direction)) {
-                    angle = 90;
-                } else if ("right".equals (direction)) {
-                    angle = 180;
-                } else if ("down".equals (direction)) {
-                    angle = -90;
-                }
-            }
-            // 设置FOCUS_MODE_CONTINUOUS_VIDEO)之后，myParam.set("rotation", 90)失效。
-            // 图片竟然不能旋转了，故这里要旋转下
-            Bitmap rotaBitmap = getRotateBitmap (b, angle);
-            saveBitmap (rotaBitmap);
-        }*/
     }
 
     //
@@ -153,10 +138,10 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
             bitmap.compress (Bitmap.CompressFormat.JPEG, 50, bos);
             bos.flush ();
             bos.close ();
-            Log.i ("CameraPictureAnalysis","saveBitmap成功，图片路径=============" + jpegName);
+            Log.i ("CameraPictureAnalysis", "saveBitmap成功，图片路径=============" + jpegName);
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            Log.i ("CameraPictureAnalysis","saveBitmap:失败＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            Log.i ("CameraPictureAnalysis", "saveBitmap:失败＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
             e.printStackTrace ();
         }
 
@@ -165,6 +150,7 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
     public void setPictureCallback(PictureCallback pictureCallback) {
         this.pictureCallback = pictureCallback;
     }
+
     /**
      * 返回缓存文件夹
      */
@@ -173,7 +159,7 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
             File file = null;
             file = context.getExternalCacheDir ();//获取系统管理的sd卡缓存文件
             if (file == null) {//如果获取的为空,就是用自己定义的缓存文件夹做缓存路径
-                file = new File ("/mnt/sdcard/" +context.getPackageName ());
+                file = new File ("/mnt/sdcard/" + context.getPackageName ());
                 if (!file.exists ()) {
                     file.mkdirs ();
                 }
