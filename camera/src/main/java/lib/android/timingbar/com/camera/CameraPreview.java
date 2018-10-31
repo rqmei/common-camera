@@ -232,7 +232,9 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
 
     private Camera.AutoFocusCallback mFocusCallback = new Camera.AutoFocusCallback () {
         public void onAutoFocus(boolean success, Camera camera) {
-            postDelayed (mAutoFocusTask, 1000);
+            if (success) {
+                postDelayed (mAutoFocusTask, 1000);
+            }
         }
     };
     /**

@@ -58,6 +58,9 @@ class CameraScanAnalysis implements Camera.PreviewCallback {
         mCameraManager = new CameraManager (context);
         mImageScanner.setConfig (0, Config.X_DENSITY, 3);
         mImageScanner.setConfig (0, Config.Y_DENSITY, 3);
+        mImageScanner.setConfig (0, Config.ENABLE, 0); //Disable all the Symbols
+        //只开启QRCODE二维码扫描
+        mImageScanner.setConfig (Symbol.QRCODE, Config.ENABLE, 1);
 
         mHandler = new Handler (Looper.getMainLooper ()) {
             @Override

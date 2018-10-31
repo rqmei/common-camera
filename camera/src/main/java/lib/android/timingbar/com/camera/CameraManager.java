@@ -184,7 +184,7 @@ public final class CameraManager {
      * @param callback {@link Camera.AutoFocusCallback}.
      */
     public void autoFocus(Camera.AutoFocusCallback callback) {
-        if (mCamera != null && mCamera.getParameters ().isSmoothZoomSupported ())
+        if (mCamera != null)
             try {
                 mCamera.autoFocus (callback);
             } catch (Exception e) {
