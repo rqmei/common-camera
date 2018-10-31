@@ -47,8 +47,9 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
     public CameraPreview(@NonNull final Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super (context, attrs, defStyleAttr);
         this.context = context;
-        mCameraManager = new CameraManager (context);
-
+        if (mCameraManager == null) {
+            mCameraManager = new CameraManager (context);
+        }
         //  动态获取相机权限并打开camera
         AndPermission.with (context)
                 .permission (Manifest.permission.CAMERA)
@@ -218,6 +219,15 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
         } catch (Exception e) {
             e.printStackTrace ();
         }
+    }
+
+    /**
+     * 拍照成功后是否保存照片到手机中
+     *
+     * @param saveBtimap true:是
+     */
+    public void setSaveBtimap(boolean saveBtimap) {
+        mCameraManager.setSaveBtimap (saveBtimap);
     }
 
     private Camera.AutoFocusCallback mFocusCallback = new Camera.AutoFocusCallback () {

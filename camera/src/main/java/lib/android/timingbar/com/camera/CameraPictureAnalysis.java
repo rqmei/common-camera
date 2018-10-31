@@ -26,6 +26,10 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
     Context context;
     PictureCallback pictureCallback;
     CameraManager cameraManager;
+    /**
+     * 保存图片的手机路径
+     */
+    static String bitmapPath = "";
 
     public CameraPictureAnalysis(Context context, CameraManager cameraManager) {
         this.context = context;
@@ -37,7 +41,6 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         Log.i ("CameraPictureAnalysis", "CameraPictureAnalysis onPictureTaken拍照结果回调");
-        Bitmap b = null;
         _displaypixels = CameraConfiguration.getScreenWidthPixels (context) * CameraConfiguration.getScreenHeightPixels (context);
         if (null != data) {
             // 解析生成相机返回的图片
@@ -48,7 +51,7 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
             opts.inSampleSize = computeSampleSize (opts, -1, _displaypixels);
             opts.inJustDecodeBounds = false;
             // end
-            b = BitmapFactory.decodeByteArray (data, 0, data.length, opts);// data是字节数据，将其解析成位 ?
+            Bitmap b = BitmapFactory.decodeByteArray (data, 0, data.length, opts);// data是字节数据，将其解析成位 ?
             // 保存图片到sdcard
             if (null != b) {
                 Camera.CameraInfo info = new Camera.CameraInfo ();
@@ -57,8 +60,12 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
                 // 设置FOCUS_MODE_CONTINUOUS_VIDEO)之后，myParam.set("rotation", 90)失效。
                 // 图片竟然不能旋转了，故这里要旋转下
                 Bitmap rotaBitmap = getRotateBitmap (b, info.orientation);
-                // saveBitmap (rotaBitmap);
-                Bitmap bitmap = ThumbnailUtils.extractThumbnail (rotaBitmap, 213, 213);
+                Bitmap bitmap = null;
+                if (cameraManager.isSaveBtimap ()) {
+                    saveBitmap (rotaBitmap);
+                } else {
+                    bitmap = ThumbnailUtils.extractThumbnail (rotaBitmap, 213, 213);
+                }
                 if (pictureCallback != null) {
                     pictureCallback.onPictureTakenResult (bitmap);
                 }
@@ -128,17 +135,22 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
         return rotaBitmap;
     }
 
+    /**
+     * 保存图片到手机的缓存文件夹中
+     *
+     * @param b
+     */
     private void saveBitmap(Bitmap b) {
-        String jpegName = getCacheFile (context) + "/face1.jpg";
+        bitmapPath = getCacheFile (context) + "/face1.jpg";
         try {
-            FileOutputStream fout = new FileOutputStream (jpegName);
+            FileOutputStream fout = new FileOutputStream (bitmapPath);
             BufferedOutputStream bos = new BufferedOutputStream (fout);
             // 生成缩略图
             Bitmap bitmap = ThumbnailUtils.extractThumbnail (b, 213, 213);
             bitmap.compress (Bitmap.CompressFormat.JPEG, 50, bos);
             bos.flush ();
             bos.close ();
-            Log.i ("CameraPictureAnalysis", "saveBitmap成功，图片路径=============" + jpegName);
+            Log.i ("CameraPictureAnalysis", "saveBitmap成功，图片路径=============" + bitmapPath);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             Log.i ("CameraPictureAnalysis", "saveBitmap:失败＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
@@ -168,5 +180,12 @@ public class CameraPictureAnalysis implements Camera.PictureCallback {
         } else {
             return context.getCacheDir ();
         }
+    }
+
+    /**
+     * @return 保存图片的路径
+     */
+    public static String getBitmapPath() {
+        return bitmapPath;
     }
 }

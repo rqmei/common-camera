@@ -24,7 +24,10 @@ public final class CameraManager {
     private final CameraConfiguration mConfiguration;
     private Camera mCamera;
     int mCameraId = 0;
+    //是否是前置摄像头
     private boolean isFrontCamera = false;
+    //是否拍照后要保存照片
+    private boolean isSaveBtimap = false;
     Context context;
 
     public CameraManager(Context context) {
@@ -94,6 +97,14 @@ public final class CameraManager {
 
     public boolean isFrontCamera() {
         return isFrontCamera;
+    }
+
+    public boolean isSaveBtimap() {
+        return isSaveBtimap;
+    }
+
+    public void setSaveBtimap(boolean saveBtimap) {
+        isSaveBtimap = saveBtimap;
     }
 
     /**
