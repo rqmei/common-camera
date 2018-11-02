@@ -28,7 +28,7 @@ public class EnhanceTabTestActivity extends BaseActivity {
     EnhanceTabLayout enhanceTabLayout;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
-    String[] sTitle = {"首页", "新闻", "公告", "热点", "咨询"};
+    String[] sTitle = {"首页", "新闻", "公告", "热点", "咨询好久疾风剑豪"};
 
     @Override
     public int getLayoutResId() {
@@ -43,10 +43,9 @@ public class EnhanceTabTestActivity extends BaseActivity {
         EnhanceTabPagerAdapter adapter = new EnhanceTabPagerAdapter (getSupportFragmentManager ());
         viewPager.setAdapter (adapter);
         viewPager.addOnPageChangeListener (new TabLayout.TabLayoutOnPageChangeListener (enhanceTabLayout.getTabLayout ()));
+        viewPager.setCurrentItem (2);
         enhanceTabLayout.setupWithViewPager (viewPager);
-
-
     }
-
+ 
 
 }

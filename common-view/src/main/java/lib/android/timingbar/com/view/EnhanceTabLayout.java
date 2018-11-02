@@ -81,6 +81,7 @@ public class EnhanceTabLayout extends FrameLayout {
         mTabLayout = view.findViewById (R.id.enhance_tab_view);
         // 添加属性
         mTabLayout.setTabMode (mTabMode == 1 ? TabLayout.MODE_FIXED : TabLayout.MODE_SCROLLABLE);
+        //tab默认的选中效果
         mTabLayout.addOnTabSelectedListener (new TabLayout.OnTabSelectedListener () {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -119,6 +120,9 @@ public class EnhanceTabLayout extends FrameLayout {
 
     /**
      * 与TabLayout 联动
+     * 第一个是从VIewPager中获取TabLayout的Title
+     * 第二个是ViewPager滑动时设置TabLayout的Title和indicator
+     * 第三个是点击TabLayout时ViewPager相应变化
      *
      * @param viewPager
      */
@@ -139,7 +143,7 @@ public class EnhanceTabLayout extends FrameLayout {
     /**
      * 添加tab
      *
-     * @param tab
+     * @param tab tab的title
      */
     public void addTab(String tab) {
         mTabList.add (tab);

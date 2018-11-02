@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 public class EnhanceTabPagerAdapter extends BaseFragmentPagerAdapter<BaseLazyFragment> {
-    String[] sTitle = {"首页", "新闻", "公告", "热点", "咨询"};
+   
 
     public EnhanceTabPagerAdapter(FragmentManager fm) {
         super (fm);
@@ -28,14 +28,4 @@ public class EnhanceTabPagerAdapter extends BaseFragmentPagerAdapter<BaseLazyFra
         }
     }
 
-    /**
-     * //此方法用来显示tab上的名字
-     *
-     * @param position
-     * @return
-     */
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return sTitle[position];
-    }
 }
