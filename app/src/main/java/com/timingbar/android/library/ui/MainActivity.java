@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.timingbar.android.library.R;
 import com.timingbar.android.library.control.CommonControl;
 import com.timingbar.android.library.module.entity.Lesson;
@@ -14,8 +15,6 @@ import com.timingbar.android.library.presenter.CommonPresenter;
 import lib.android.timingbar.com.base.activity.BaseActivity;
 import lib.android.timingbar.com.base.imageloader.glide.GlideImageConfig;
 import lib.android.timingbar.com.base.mvp.EventMessage;
-import lib.android.timingbar.com.base.mvp.IView;
-import lib.android.timingbar.com.base.mvp.Message;
 import lib.android.timingbar.com.http.util.HttpLog;
 
 import java.util.List;
@@ -32,6 +31,8 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
     @BindView(R.id.iv_glid)
     ImageView ivGlid;
     ProgressDialog progressDialog;
+    @BindView(R.id.btn_enhance_tab)
+    Button btnEnhanceTab;
 
     @Override
     public void onClick(View v) {
@@ -48,6 +49,9 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
                 break;
             case R.id.btn_player://播放器
                 startActivity (new Intent (this, PlayerActivity.class));
+                break;
+            case R.id.btn_enhance_tab:
+                startActivity (new Intent (this, EnhanceTabTestActivity.class));
                 break;
         }
     }
@@ -85,6 +89,7 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
         btnCamera.setOnClickListener (this);
         btnHandSign.setOnClickListener (this);
         btnPlayer.setOnClickListener (this);
+        btnEnhanceTab.setOnClickListener (this);
         mPresenter.getVersionCode ();
         mPresenter.getLsssonPhase (this);
         application.imageLoader ().loadImage (getApplicationContext (), GlideImageConfig.builder ().imageView (ivGlid).placeholder (R.mipmap.ic_launcher).transformationType (4).url ("http://ww1.sinaimg.cn/mw600/6345d84ejw1dvxp9dioykg.gif").build ());
@@ -106,5 +111,12 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
     public void onReceiveEvent(EventMessage event) {
         List<Lesson> lessons = (List<Lesson>) event.getData ();
         HttpLog.i ("mainActivity onReceiveEvent===" + lessons.size ());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate (savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind (this);
     }
 }

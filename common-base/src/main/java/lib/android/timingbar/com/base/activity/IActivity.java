@@ -2,6 +2,7 @@ package lib.android.timingbar.com.base.activity;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import lib.android.timingbar.com.base.fragment.BaseLazyFragment;
 import lib.android.timingbar.com.base.mvp.IPresenter;
 
 /**
@@ -60,7 +61,7 @@ public interface IActivity<P extends IPresenter> {
 
     /**
      * 这个Activity是否会使用Fragment,框架会根据这个属性判断是否注册{@link android.support.v4.app.FragmentManager.FragmentLifecycleCallbacks}
-     * 如果返回false,那意味着这个Activity不需要绑定Fragment,那你再在这个Activity中绑定继承于 {@link lib.android.timingbar.com.base.fragment.BaseFragment} 的Fragment将不起任何作用
+     * 如果返回false,那意味着这个Activity不需要绑定Fragment,那你再在这个Activity中绑定继承于 {@link BaseLazyFragment} 的Fragment将不起任何作用
      *
      * @return
      */
