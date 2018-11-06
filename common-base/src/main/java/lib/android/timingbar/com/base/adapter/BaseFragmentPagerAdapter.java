@@ -16,10 +16,12 @@ import java.util.List;
  * @author rqmei on 2018/11/2
  */
 
-public abstract class BaseFragmentPagerAdapter<T extends Fragment> extends FragmentPagerAdapter {
+public class BaseFragmentPagerAdapter<T extends Fragment> extends FragmentPagerAdapter {
     private List<T> mFragments = new ArrayList<> (); // Fragment集合
 
     private T mCurrentFragment; // 当前显示的Fragment
+
+    private String[] titles;
 
     /**
      * 在Activity中使用ViewPager适配器
@@ -40,8 +42,22 @@ public abstract class BaseFragmentPagerAdapter<T extends Fragment> extends Fragm
         init (fm, mFragments);
     }
 
+    public BaseFragmentPagerAdapter(FragmentManager fm, List<T> mFragments) {
+        super (fm);
+        this.mFragments = mFragments;
+    }
+
+    public BaseFragmentPagerAdapter(FragmentManager fm, String[] titles, List<T> mFragments) {
+        super (fm);
+        this.titles = titles;
+        this.mFragments = mFragments;
+    }
+
     //初始化Fragment
-    protected abstract void init(FragmentManager fm, List<T> list);
+    protected void init(FragmentManager fm, List<T> list) {
+    }
+
+    ;
 
     @Override
     public T getItem(int position) {
@@ -60,6 +76,11 @@ public abstract class BaseFragmentPagerAdapter<T extends Fragment> extends Fragm
             mCurrentFragment = (T) object;
         }
         super.setPrimaryItem (container, position, object);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titles == null ? super.getPageTitle (position) : titles[position];
     }
 
     /**

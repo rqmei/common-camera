@@ -1,20 +1,13 @@
-package com.timingbar.android.library.ui;
+package com.timingbar.android.library.ui.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import butterknife.BindView;
 import com.timingbar.android.library.R;
-import com.timingbar.android.library.adapter.EnhanceTabPagerAdapter;
-import com.timingbar.android.library.ui.fragment.EnhanceItemFragment;
+import com.timingbar.android.library.ui.adapter.EnhanceTabPagerAdapter;
 import lib.android.timingbar.com.base.activity.BaseActivity;
 import lib.android.timingbar.com.view.EnhanceTabLayout;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * EnhanceTabTestActivity

@@ -23,6 +23,7 @@ public class ModuleApp extends BaseApplication {
         app = this;
         EasyHttp.init (this);
         EasyHttp.getInstance ().debug ("lib-camera", true).setBaseUrl ("http://www.jsyxx.cn/edu/mobile/");
+        Thread.setDefaultUncaughtExceptionHandler (AppException.getAppExceptionHandler (this));
     }
 
 }

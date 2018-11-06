@@ -1,9 +1,11 @@
-package com.timingbar.android.library.ui.fragment;
+package com.timingbar.android.library.ui.activity.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import butterknife.BindView;
 import com.timingbar.android.library.R;
+import com.timingbar.android.library.presenter.CommonPresenter;
 import lib.android.timingbar.com.base.fragment.BaseLazyFragment;
 import lib.android.timingbar.com.base.mvp.IPresenter;
 
@@ -14,7 +16,7 @@ import lib.android.timingbar.com.base.mvp.IPresenter;
  * @author rqmei on 2018/11/1
  */
 
-public class EnhanceItemFragment extends BaseLazyFragment {
+public class EnhanceItemFragment extends BaseLazyFragment<CommonPresenter> {
 
     @BindView(R.id.text)
     TextView text;
@@ -39,12 +41,13 @@ public class EnhanceItemFragment extends BaseLazyFragment {
 
     @Override
     public void onFragmentResume() {
+        Log.i ("EnhanceItemFragment", "onFragmentResume========");
         text.setText ("当前是第" + getArguments ().getInt ("position", 0) + "个页面");
     }
 
     @Override
     public IPresenter obtainPresenter() {
-        return null;
+        return new CommonPresenter (application);
     }
 
 }

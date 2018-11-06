@@ -1,4 +1,4 @@
-package com.timingbar.android.library.ui;
+package com.timingbar.android.library.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity<CommonPresenter> implements View.
                 startActivity (new Intent (this, PlayerActivity.class));
                 break;
             case R.id.btn_enhance_tab:
-                startActivity (new Intent (this, EnhanceTabTestActivity.class));
+                startActivity (new Intent (this, BottomTabActivity.class));
                 break;
         }
     }

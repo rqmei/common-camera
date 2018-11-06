@@ -1,4 +1,4 @@
-package com.timingbar.android.library.adapter;
+package com.timingbar.android.library.ui.adapter;
 
 import android.content.Context;
 import lib.android.timingbar.com.base.adapter.BaseListViewAdapter;

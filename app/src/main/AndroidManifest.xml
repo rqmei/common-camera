@@ -34,7 +34,7 @@
         <meta-data
                 android:name="lib.android.timingbar.com.base.imageloader.glide.GlideConfiguration"
                 android:value="GlideModule"/>
-        <activity android:name="com.timingbar.android.library.ui.MainActivity">
+        <activity android:name="com.timingbar.android.library.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -42,20 +42,21 @@
             </intent-filter>
         </activity>
         <!--二维码扫描-->
-        <activity android:name="com.timingbar.android.library.ui.ScanActivity"
+        <activity android:name="com.timingbar.android.library.ui.activity.ScanActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"
                   android:screenOrientation="portrait"
         />
         <!--拍照-->
-        <activity android:name="com.timingbar.android.library.ui.CameraActivity"/>
+        <activity android:name="com.timingbar.android.library.ui.activity.CameraActivity"/>
         <!--手写签名-->
-        <activity android:name="com.timingbar.android.library.ui.HandSignActivity"/>
+        <activity android:name="com.timingbar.android.library.ui.activity.HandSignActivity"/>
         <!--视频播放器-->
-        <activity android:name=".ui.PlayerActivity"
+        <activity android:name=".ui.activity.PlayerActivity"
                   android:configChanges="orientation|keyboardHidden|screenSize|navigation"
                   android:launchMode="singleTop"
         />
-        <activity android:name=".ui.EnhanceTabTestActivity"/>
+        <activity android:name=".ui.activity.EnhanceTabTestActivity"/>
+        <activity android:name=".ui.activity.BottomTabActivity"/>
     </application>
 
 </manifest>

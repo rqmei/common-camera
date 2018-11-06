@@ -1,21 +1,16 @@
-package com.timingbar.android.library.ui;
+package com.timingbar.android.library.ui.activity;
 
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.timingbar.android.app.ModuleApp;
 import com.timingbar.android.library.R;
-import com.timingbar.android.library.presenter.CommonPresenter;
 import lib.android.timingbar.com.base.activity.BaseActivity;
-import lib.android.timingbar.com.base.app.BaseApplication;
 import lib.android.timingbar.com.http.util.HttpLog;
 import lib.android.timingbar.com.view.handSign.HandSignView;
 

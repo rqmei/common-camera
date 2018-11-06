@@ -1,14 +1,12 @@
-package com.timingbar.android.library.ui;
+package com.timingbar.android.library.ui.activity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.timingbar.android.library.R;
 import lib.android.timingbar.com.base.activity.BaseActivity;
 import lib.android.timingbar.com.camera.ScanCallback;

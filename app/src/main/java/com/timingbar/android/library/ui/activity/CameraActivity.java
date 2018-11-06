@@ -1,4 +1,4 @@
-package com.timingbar.android.library.ui;
+package com.timingbar.android.library.ui.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;

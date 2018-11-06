@@ -1,7 +1,8 @@
-package com.timingbar.android.library.adapter;
+package com.timingbar.android.library.ui.adapter;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import com.timingbar.android.library.ui.fragment.EnhanceItemFragment;
+import com.timingbar.android.library.ui.activity.fragment.EnhanceItemFragment;
 import lib.android.timingbar.com.base.adapter.BaseFragmentPagerAdapter;
 import lib.android.timingbar.com.base.fragment.BaseLazyFragment;
 
@@ -15,10 +16,13 @@ import java.util.List;
  */
 
 public class EnhanceTabPagerAdapter extends BaseFragmentPagerAdapter<BaseLazyFragment> {
-   
 
     public EnhanceTabPagerAdapter(FragmentManager fm) {
         super (fm);
+    }
+
+    public EnhanceTabPagerAdapter(FragmentManager fm, String[] titls, List<BaseLazyFragment> fragments) {
+        super (fm, titls, fragments);
     }
 
     @Override
@@ -27,5 +31,4 @@ public class EnhanceTabPagerAdapter extends BaseFragmentPagerAdapter<BaseLazyFra
             list.add (EnhanceItemFragment.newInstance (i + 1));
         }
     }
-
 }

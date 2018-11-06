@@ -2,8 +2,10 @@ package lib.android.timingbar.com.base.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.internal.BaselineLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,17 +32,11 @@ import java.util.List;
  * @author rqmei on 2018/1/30
  */
 
-public abstract class BaseLazyFragment<P extends IPresenter> extends Fragment implements IFragment<P> {
-    protected P mPresenter;
-    Unbinder unbinder;
+public abstract class BaseLazyFragment<P extends IPresenter> extends BaseFragment {
     /**
      * fragment是否是首次可见
      */
     private boolean isFirstVisible;
-    /**
-     * onCreateView方法中方法的view,
-     */
-    private View rootView;
     /**
      * view 是否创建成功
      */
@@ -53,24 +49,6 @@ public abstract class BaseLazyFragment<P extends IPresenter> extends Fragment im
     public BaseLazyFragment() {
         //必须确保在Fragment实例化时setArguments()
         setArguments (new Bundle ());
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate (savedInstanceState);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate (getLayoutRes (), container, false);
-        }
-        if (isRegisterEventBus ()) {
-            EventBusUtils.register (this);
-        }
-        unbinder = ButterKnife.bind (this, rootView);
-        return rootView;
     }
 
     /**
@@ -89,32 +67,10 @@ public abstract class BaseLazyFragment<P extends IPresenter> extends Fragment im
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated (savedInstanceState);
+        BaseLog.e (getClass ().getSimpleName () + "  onActivityCreated   hidden " + isHidden () + "getUserVisibleHint=" + getUserVisibleHint ());
         isViewCreated = true;
-        // !isHidden() 默认为 true  在调用 hide show 的时候可以使用
-        if (!isHidden () && getUserVisibleHint ()) {
-            // 这里的限制只能限制 A - > B 两层嵌套
-            dispatchUserVisibleHint (true);
-        }
-        if (mPresenter == null) {
-            mPresenter = obtainPresenter ();
-        }
     }
 
-    /**
-     * 通知fragment，该视图层已保存
-     * 每次新建Fragment都会发生.
-     * 它并不是实例状态恢复的方法, 只是一个View状态恢复的回调.
-     * 在onActivityCreated()和onStart()之间调用
-     *
-     * @param savedInstanceState
-     */
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored (savedInstanceState);
-        if (mPresenter == null) {
-            mPresenter = obtainPresenter ();
-        }
-    }
 
     /**
      * 视图是否已经对用户可见，系统的方法,在fragment的所有生命周期之前执行
@@ -128,6 +84,7 @@ public abstract class BaseLazyFragment<P extends IPresenter> extends Fragment im
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint (isVisibleToUser);
+        BaseLog.e (getClass ().getSimpleName () + "  setUserVisibleHint   isVisibleToUser " + isVisibleToUser + "currentVisibleState=" + currentVisibleState);
         if (rootView == null) {
             return;
         }
@@ -157,6 +114,7 @@ public abstract class BaseLazyFragment<P extends IPresenter> extends Fragment im
     @Override
     public void onResume() {
         super.onResume ();
+        BaseLog.e (getClass ().getSimpleName () + "  isFirstVisible " + isFirstVisible + ",isHidden=" + isHidden () + ",currentVisibleState=" + currentVisibleState + ",getUserVisibleHint=" + getUserVisibleHint ());
         if (!isFirstVisible) {
             if (!isHidden () && !currentVisibleState && getUserVisibleHint ()) {
                 dispatchUserVisibleHint (true);
@@ -179,49 +137,6 @@ public abstract class BaseLazyFragment<P extends IPresenter> extends Fragment im
         super.onDestroyView ();
         isViewCreated = false;
         isFirstVisible = true;
-        if (isRegisterEventBus ()) {
-            EventBusUtils.unregister (this);
-        }
-        if (unbinder != null) {
-            unbinder.unbind ();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy ();
-    }
-
-    @Override
-    public void setPresenter(P presenter) {
-        this.mPresenter = presenter;
-    }
-
-    /**
-     * 是否使用eventBus,默认为使用(true)，
-     */
-    @Override
-    public boolean isRegisterEventBus() {
-        return true;
-    }
-
-
-    /**
-     * 接收到分发的事件
-     *
-     * @param event 事件
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveEvent(EventMessage event) {
-    }
-
-    /**
-     * 接受到分发的粘性事件
-     *
-     * @param event 粘性事件
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onReceiveStickyEvent(EventMessage event) {
     }
 
     private boolean isFragmentVisible(Fragment fragment) {
@@ -235,8 +150,12 @@ public abstract class BaseLazyFragment<P extends IPresenter> extends Fragment im
      */
     private boolean isParentInvisible() {
         BaseLazyFragment fragment = (BaseLazyFragment) getParentFragment ();
-        return fragment != null && !currentVisibleState;
+        return fragment != null && !fragment.isSupportVisible ();
 
+    }
+
+    private boolean isSupportVisible() {
+        return currentVisibleState;
     }
 
 
