@@ -56,7 +56,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
                 .callback (new PermissionListener () {
                     @Override
                     public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
-                        start (Camera.CameraInfo.CAMERA_FACING_FRONT);
+                        initCamera (Camera.CameraInfo.CAMERA_FACING_FRONT);
                         cameraPictureAnalysis = new CameraPictureAnalysis (getContext (), mCameraManager);
                     }
 
@@ -88,7 +88,7 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
     /**
      * Camera start preview.
      */
-    public boolean start(int cameraId) {
+    public boolean initCamera(int cameraId) {
         try {
             mCameraManager.openDriver (cameraId);
         } catch (Exception e) {
@@ -160,9 +160,13 @@ public class CameraPreview extends FrameLayout implements SurfaceHolder.Callback
                     stop ();
                     Log.i ("CameraPreview", "cameraPreView 开始切换camera摄像头isFrontCamera=" + mCameraManager.isFrontCamera () + "," + mCameraManager.isOpen ());
                     if (mCameraManager.isFrontCamera ()) {
-                        start (Camera.CameraInfo.CAMERA_FACING_BACK);
+                        if (initCamera (Camera.CameraInfo.CAMERA_FACING_BACK)) {
+                            startCameraPreview (mSurfaceView.getHolder ());
+                        }
                     } else {
-                        start (Camera.CameraInfo.CAMERA_FACING_FRONT);
+                        if (initCamera (Camera.CameraInfo.CAMERA_FACING_FRONT)) {
+                            startCameraPreview (mSurfaceView.getHolder ());
+                        }
                     }
                 }
             });

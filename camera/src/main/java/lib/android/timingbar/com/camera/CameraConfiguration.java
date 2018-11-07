@@ -1,6 +1,7 @@
 package lib.android.timingbar.com.camera;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Build;
@@ -81,6 +82,11 @@ public final class CameraConfiguration {
             return;
         }
         parameters.setPreviewSize (cameraResolution.x, cameraResolution.y);
+        Camera.Size pictureSize = getBestPictureSize (parameters.getSupportedPictureSizes (), cameraResolution.x, cameraResolution.y);
+        if (pictureSize != null) {
+            parameters.setPictureSize (pictureSize.width, pictureSize.height);
+        }
+        parameters.setPictureFormat (PixelFormat.JPEG);// 设置拍照后存储的图片格式
         camera.setParameters (parameters);
         Camera.Parameters afterParameters = camera.getParameters ();
         Camera.Size afterSize = afterParameters.getPreviewSize ();
@@ -89,6 +95,34 @@ public final class CameraConfiguration {
             cameraResolution.y = afterSize.height;
         }
         camera.setDisplayOrientation (90);
+    }
+    /**
+     * 获取最佳相机照片Size参数
+     *
+     * @return
+     */
+    public Camera.Size getBestPictureSize(List<Camera.Size> sizes, int w, int h) {
+        Camera.Size optimalSize = null;
+        float targetRadio = h / (float) w;
+        float optimalDif = Float.MAX_VALUE; //最匹配的比例
+        int optimalMaxDif = Integer.MAX_VALUE;//最优的最大值差距
+        for (Camera.Size size : sizes) {
+            float newOptimal = size.width / (float) size.height;
+            float newDiff = Math.abs (newOptimal - targetRadio);
+            if (newDiff < optimalDif) { //更好的尺寸
+                optimalDif = newDiff;
+                optimalSize = size;
+                optimalMaxDif = Math.abs (h - size.width);
+            } else if (newDiff == optimalDif) {//更好的尺寸
+                int newOptimalMaxDif = Math.abs (h - size.width);
+                if (newOptimalMaxDif < optimalMaxDif) {
+                    optimalDif = newDiff;
+                    optimalSize = size;
+                    optimalMaxDif = newOptimalMaxDif;
+                }
+            }
+        }
+        return optimalSize;
     }
 
     /**
