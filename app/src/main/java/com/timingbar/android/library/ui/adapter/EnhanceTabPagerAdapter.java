@@ -1,6 +1,5 @@
 package com.timingbar.android.library.ui.adapter;
 
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import com.timingbar.android.library.ui.activity.fragment.EnhanceItemFragment;
 import lib.android.timingbar.com.base.adapter.BaseFragmentPagerAdapter;
