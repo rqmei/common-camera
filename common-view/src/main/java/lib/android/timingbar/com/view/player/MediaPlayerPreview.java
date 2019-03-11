@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import lib.android.timingbar.com.view.R;
+import lib.android.timingbar.com.openview.R;
 import lib.android.timingbar.com.view.player.util.CommonUtil;
 import lib.android.timingbar.com.view.player.util.ConstUtils;
 import lib.android.timingbar.com.view.player.util.PlayerCallback;
