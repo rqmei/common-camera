@@ -18,6 +18,7 @@ import android.os.Build;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import lib.android.timingbar.com.openview.R;
 
 
 /**
