@@ -3,7 +3,7 @@ package lib.android.timingbar.com.base.app;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import lib.android.timingbar.com.base.imageloader.ImageLoader;
+import android.support.v7.app.AppCompatDelegate;
 import lib.android.timingbar.com.base.integration.AppManager;
 import lib.android.timingbar.com.base.mvp.IRepositoryManager;
 import lib.android.timingbar.com.base.mvp.RepositoryManagerImpl;
@@ -20,15 +20,22 @@ public class BaseApplication extends Application implements IApp {
     private AppDelegateImpl mAppDelegate;
     AppManager appManager;
     IRepositoryManager repositoryManager;
-    ImageLoader imageLoader;
 
+    /**
+     *vector 兼容5.0以下系统
+     */
+    static {
+        /*获取当前系统的android版本号*/
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion < 21)//适配android5.0以下
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     public void onCreate() {
         super.onCreate ();
         appManager = new AppManager (this);
         this.mAppDelegate = new AppDelegateImpl (this);
-        this.imageLoader = new ImageLoader ();
         this.repositoryManager = new RepositoryManagerImpl ();
         this.mAppDelegate.onCreate ();
     }
@@ -67,8 +74,4 @@ public class BaseApplication extends Application implements IApp {
         return repositoryManager == null ? new RepositoryManagerImpl () : repositoryManager;
     }
 
-    @Override
-    public ImageLoader imageLoader() {
-        return imageLoader == null ? new ImageLoader () : imageLoader;
-    }
 }

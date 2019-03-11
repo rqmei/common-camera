@@ -15,8 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.*;
-import lib.android.timingbar.com.base.imageloader.ImageLoader;
-import lib.android.timingbar.com.base.imageloader.glide.GlideImageConfig;
+import lib.android.timingbar.com.imageloader.ImageLoader;
+import lib.android.timingbar.com.imageloader.glide.GlideImageConfig;
 
 /**
  * ViewHolder

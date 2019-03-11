@@ -19,15 +19,18 @@ android {
 
 }
 dependencies {
-    compile(rootProject.ext.dependencies["support-v4"]) {
-        //依赖排除
-        exclude module: 'support-annotations'
-    }
-    compile(rootProject.ext.dependencies["appcompat-v7"]) {
-        exclude module: 'support-annotations'
-        exclude module: 'support-v4'
-        compile'com.android.support:recyclerview-v7:'+rootProject.ext.version["androidSupportSdkVersion"]
-    }
-
-    compile project(path: ':common-base')
+    implementation rootProject.ext.dependencies["support-v4"]
+    implementation rootProject.ext.dependencies["appcompat-v7"]
+    implementation rootProject.ext.dependencies["design"]
+    implementation rootProject.ext.dependencies["annotations"]
+    api  rootProject.ext.dependencies["recyclerview-v7"]
+    api  rootProject.ext.dependencies["support-vector-drawable"]
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.0'
+    api rootProject.ext.dependencies["glide"]
+    annotationProcessor rootProject.ext.dependencies["glide-compiler"]
+    api rootProject.ext.dependencies["glide-transformations"]
+    // test 单元测试
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
