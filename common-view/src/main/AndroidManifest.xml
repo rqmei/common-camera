@@ -1,4 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="lib.android.timingbar.com.openview">
+          package="lib.android.timingbar.com.commonview">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 </manifest>

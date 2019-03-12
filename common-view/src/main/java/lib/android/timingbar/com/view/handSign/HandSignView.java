@@ -10,7 +10,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import lib.android.timingbar.com.openview.R;
+import lib.android.timingbar.com.commonview.R;
 import lib.android.timingbar.com.view.handSign.point.DrawPoint;
 import lib.android.timingbar.com.view.handSign.point.PointUtil;
 import lib.android.timingbar.com.view.handSign.point.TimedPoint;

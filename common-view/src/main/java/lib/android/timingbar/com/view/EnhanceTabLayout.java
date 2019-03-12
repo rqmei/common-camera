@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import lib.android.timingbar.com.openview.R;
+import lib.android.timingbar.com.commonview.R;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
